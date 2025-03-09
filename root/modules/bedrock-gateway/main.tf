@@ -17,8 +17,25 @@ locals {
 }
 
 
+# First, create the secret
+resource "aws_secretsmanager_secret" "api_key" {
+  name        = "${local.name_prefix}/api-key"
+  description = "API Key for Bedrock Gateway"
+  tags        = local.common_tags
+}
+
+resource "aws_secretsmanager_secret_version" "api_key" {
+  secret_id     = aws_secretsmanager_secret.api_key.id
+  secret_string = var.initial_api_key
+}
+
+
+
+
+# Then use data source to fetch it
 data "aws_secretsmanager_secret" "api_key" {
-  name = var.api_key_secret_name
+  name = aws_secretsmanager_secret.api_key.name
+  depends_on = [aws_secretsmanager_secret.api_key]
 }
 
 #resource "aws_secretsmanager_secret" "api_key" {
@@ -55,7 +72,8 @@ resource "aws_lambda_function" "proxy_api_handler" {
 
   depends_on = [
     docker_image.bedrock_gateway,
-    null_resource.docker_build_push
+    null_resource.docker_build_push,
+    aws_secretsmanager_secret_version.api_key
   ]
   tags = local.common_tags
 }
