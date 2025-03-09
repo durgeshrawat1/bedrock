@@ -6,7 +6,6 @@ provider "aws" {
 }
 
 
-# Add this policy to your existing IAM configuration
 resource "aws_iam_role_policy" "lambda_secrets" {
   name = "${local.name_prefix}-secrets-access"
   role = aws_iam_role.lambda_execution_role.id
@@ -20,7 +19,7 @@ resource "aws_iam_role_policy" "lambda_secrets" {
           "secretsmanager:GetSecretValue"
         ]
         Resource = [
-          aws_secretsmanager_secret.api_key.arn
+          data.aws_secretsmanager_secret.api_key.arn
         ]
       }
     ]
