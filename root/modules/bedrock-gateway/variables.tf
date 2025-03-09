@@ -147,3 +147,9 @@ variable "pip_conf_content" {
 index-url = https://pypi.org/simple
 EOT
 } 
+
+
+variable "api_key_secret_name" {
+  type        = string
+  description = "Name of the existing Secrets Manager secret containing the API key"
+}
