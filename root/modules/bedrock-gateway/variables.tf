@@ -153,3 +153,9 @@ variable "api_key_secret_name" {
   type        = string
   description = "Name of the existing Secrets Manager secret containing the API key"
 }
+
+variable "initial_api_key" {
+  type        = string
+  description = "Initial API key value to be stored in Secrets Manager"
+  sensitive   = true
+}
