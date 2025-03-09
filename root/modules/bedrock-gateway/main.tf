@@ -16,6 +16,14 @@ locals {
   lambda_image_uri = var.use_docker_provider ? docker_image.bedrock_gateway[0].name : var.docker_image_uri
 }
 
+
+resource "aws_secretsmanager_secret" "api_key" {
+  name        = "${local.name_prefix}/api-key"
+  description = "API Key for Bedrock Gateway"
+  tags        = local.common_tags
+}
+
+
 # Lambda Function
 resource "aws_lambda_function" "proxy_api_handler" {
   image_uri        = local.lambda_image_uri
@@ -34,7 +42,7 @@ resource "aws_lambda_function" "proxy_api_handler" {
   environment {
     variables = {
       DEBUG                        = "false"
-      API_KEY_SECRET_ARN          = var.api_key_secret_arn
+      API_KEY_SECRET_ARN          = aws_secretsmanager_secret.api_key.arn  # Updated to use local secret
       DEFAULT_MODEL               = var.default_model_id
       DEFAULT_EMBEDDING_MODEL     = "cohere.embed-multilingual-v3"
       ENABLE_CROSS_REGION_INFERENCE = "true"
