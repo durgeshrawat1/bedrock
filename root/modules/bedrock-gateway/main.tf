@@ -17,11 +17,15 @@ locals {
 }
 
 
-resource "aws_secretsmanager_secret" "api_key" {
-  name        = "${local.name_prefix}/api-key"
-  description = "API Key for Bedrock Gateway"
-  tags        = local.common_tags
+data "aws_secretsmanager_secret" "api_key" {
+  name = var.api_key_secret_name
 }
+
+#resource "aws_secretsmanager_secret" "api_key" {
+#  name        = "${local.name_prefix}/api-key"
+#  description = "API Key for Bedrock Gateway"
+#  tags        = local.common_tags
+#}
 
 
 # Lambda Function
@@ -42,7 +46,7 @@ resource "aws_lambda_function" "proxy_api_handler" {
   environment {
     variables = {
       DEBUG                        = "false"
-      API_KEY_SECRET_ARN          = aws_secretsmanager_secret.api_key.arn  # Updated to use local secret
+      API_KEY_SECRET_ARN           = data.aws_secretsmanager_secret.api_key.arn
       DEFAULT_MODEL               = var.default_model_id
       DEFAULT_EMBEDDING_MODEL     = "cohere.embed-multilingual-v3"
       ENABLE_CROSS_REGION_INFERENCE = "true"
