@@ -74,10 +74,10 @@ variable "private_subnets" {
   }
 }
 
-variable "api_key_secret_arn" {
-  description = "ARN of the secret containing the API key in AWS Secrets Manager"
-  type        = string
-}
+#variable "api_key_secret_arn" {
+#  description = "ARN of the secret containing the API key in AWS Secrets Manager"
+#  type        = string
+#}
 
 variable "default_model_id" {
   description = "Default Bedrock model ID"
