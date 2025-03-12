@@ -159,3 +159,8 @@ variable "initial_api_key" {
   description = "Initial API key value to be stored in Secrets Manager"
   sensitive   = true
 }
+
+variable "docker_image_uri" {
+  description = "URI of the Docker image to use if not building with Docker"
+  type        = string
+}

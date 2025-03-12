@@ -43,11 +43,12 @@ resource "aws_iam_role" "lambda_execution_role" {
     ]
   })
 
-  managed_policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  ]
-
   tags = local.common_tags
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+  role       = aws_iam_role.lambda_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 # Lambda CloudWatch Logs policy

@@ -201,4 +201,11 @@ resource "aws_cloudwatch_log_group" "proxy_api" {
   kms_key_id       = var.kms_key_arn
 
   tags = local.common_tags
+}
+
+resource "docker_image" "bedrock_gateway" {
+  name         = "${var.app_prefix}-${var.environment}"
+  build {
+    context    = "${path.module}/docker"
+  }
 } 
